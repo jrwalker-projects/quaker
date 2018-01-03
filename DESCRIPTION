@@ -1,11 +1,18 @@
 Package: quaker
 Type: Package
-Title: What the Package Does (Title Case)
+Title: clean, plot and map NOAA earthquake data
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Someone At Coursera
+Maintainer: Joe Developer <Joe.Developer@some.domain.net>
+Description: The quaker package provides tools to examine, analize and visualize earthquake data from a dataset obtained from the U.S. National Oceanographic and Atmospheric Administration (NOAA) on significant earthquakes around the world. This dataset contains information about 5,933 earthquakes over an approximately 4,000 year time span. There is support code to prepare the NOAA earthquake data for analysis and visualization. The are functions to act as "geoms" - extensions to the ggplot2 plotting and mapping capability in R. There are functions to enhance the visualization of earthquake locations using the Leaflet mapping routines.
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
+Imports: dplyr, ggplot2, magrittr, grid, lubridate, leaflet
+RoxygenNote: 6.0.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat,
+    covr
+VignetteBuilder: knitr
