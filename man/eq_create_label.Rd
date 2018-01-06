@@ -11,10 +11,11 @@ eq_create_label(df)
 can be found below in the refereces}
 }
 \value{
-a character vector with the combined information location, magnitude and total deaths for popup display
+a character vector with the combined information location, magnitude and total deaths. This vector can be added
+to the earthquake data frame to enhance popup display
 }
 \description{
-\code{eq_create_label} builds a column combining location, magnitude and deaths for display in map popups
+\code{eq_create_label} builds a vector combining location, magnitude and deaths for display in map popups
 }
 \examples{
 \dontrun{

@@ -54,11 +54,12 @@ eq_map <- function(df, annot_col, pretty = FALSE){
 }
 #' Map NOAA earthquake data
 #'
-#' \code{eq_create_label} builds a column combining location, magnitude and deaths for display in map popups
+#' \code{eq_create_label} builds a vector combining location, magnitude and deaths for display in map popups
 #'
 #' @param df is the raw NOAA data frame as read from the web site - a link to the data source and to the data descriptions
 #' can be found below in the refereces
-#' @return a character vector with the combined information location, magnitude and total deaths for popup display
+#' @return a character vector with the combined information location, magnitude and total deaths. This vector can be added
+#' to the earthquake data frame to enhance popup display
 #'
 #' @examples
 #' \dontrun{
