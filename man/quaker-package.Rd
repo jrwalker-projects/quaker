@@ -16,6 +16,11 @@ that might be of interest from \pkg{quaker} include\cr
 \code{\link{geom_timeline}} to plot earthquake activity over time\cr
 \code{\link{geom_timeline_label}} to annotate a geom_timeline plot with labels\cr
 \code{\link{eq_map}} to map earthquake locations\cr
+}
+
+\section{Data}{
+
+the package includes \code{\link{quakes}} a small data frame of earthquake data for quick sample use of the functions\cr
 Please refer to the vignette for more information.
 }
 

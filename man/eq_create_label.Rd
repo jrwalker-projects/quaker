@@ -7,8 +7,8 @@
 eq_create_label(df)
 }
 \arguments{
-\item{df}{is the raw NOAA data frame as read from the web site - a link to the data source and to the data descriptions
-can be found below in the refereces}
+\item{df}{is the cleaned NOAA data frame after \code{eq_clean_data} has been called - a link to the data source and to the
+data descriptions can be found below in the refereces}
 }
 \value{
 a character vector with the combined information location, magnitude and total deaths. This vector can be added

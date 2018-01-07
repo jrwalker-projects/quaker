@@ -12,13 +12,22 @@
   ...
 }}
 \source{
-\url{https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1}
-and the data defintions can be found at https://www.ngdc.noaa.gov/nndc/struts/results?&t=101650&s=225&d=225
+\url{https://www.ngdc.noaa.gov/nndc/struts/results?&t=101650&s=225&d=225} data definitions - the data can be
+downloaded from \url{https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1}
 }
 \usage{
 quakes
 }
 \description{
 A dataset containing 64 rows of the NOAA earthquake dataset to provide sample data for the quaker routines
+}
+\examples{
+\dontrun{
+data(quakes)
+my_clean_df <- eq_clean_data(quakes)
+}
+}
+\seealso{
+\code{\link{eq_clean_data}} to prepare the NOAA data for plotting or mapping functions
 }
 \keyword{datasets}

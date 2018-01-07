@@ -3,8 +3,8 @@
 #' \code{eq_map} displays an interactive map showing earthquake locations from the NOAA earthquake data. \code{eq_map} uses
 #' the leaflet R package to
 #'
-#' @param df is the raw NOAA data frame as read from the web site - a link to the data source and to the data descriptions
-#' can be found below in the refereces
+#' @param df is the cleaned NOAA data frame after \code{eq_clean_data} has been called - a link to the data source and to the
+#' data descriptions can be found below in the refereces
 #' @param annot_col is a single text value for the column name to be displayed as the popup value when the user hovers over
 #' a data point on the map. This column can be a single data item, for example "DATE" or this can be a column of combined
 #' values using the \code{eq_create_label} function.
@@ -28,6 +28,7 @@
 #'
 #' @importFrom tools toTitleCase
 #' @importFrom dplyr select
+#' @importFrom dplyr one_of
 #' @importFrom dplyr mutate
 #' @importFrom leaflet leaflet
 #' @importFrom leaflet addTiles
@@ -38,7 +39,7 @@
 eq_map <- function(df, annot_col, pretty = FALSE){
   ptxt <- tools::toTitleCase(base::tolower(annot_col))
   tf <- df %>%
-    dplyr::select(one_of(annot_col))
+    dplyr::select(dplyr::one_of(annot_col))
   names(tf) <- "popup_info"
   df$popup_info <- tf$popup_info
   if(pretty){
@@ -56,8 +57,8 @@ eq_map <- function(df, annot_col, pretty = FALSE){
 #'
 #' \code{eq_create_label} builds a vector combining location, magnitude and deaths for display in map popups
 #'
-#' @param df is the raw NOAA data frame as read from the web site - a link to the data source and to the data descriptions
-#' can be found below in the refereces
+#' @param df is the cleaned NOAA data frame after \code{eq_clean_data} has been called - a link to the data source and to the
+#' data descriptions can be found below in the refereces
 #' @return a character vector with the combined information location, magnitude and total deaths. This vector can be added
 #' to the earthquake data frame to enhance popup display
 #'

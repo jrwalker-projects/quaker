@@ -7,8 +7,8 @@
 eq_map(df, annot_col, pretty = FALSE)
 }
 \arguments{
-\item{df}{is the raw NOAA data frame as read from the web site - a link to the data source and to the data descriptions
-can be found below in the refereces}
+\item{df}{is the cleaned NOAA data frame after \code{eq_clean_data} has been called - a link to the data source and to the
+data descriptions can be found below in the refereces}
 
 \item{annot_col}{is a single text value for the column name to be displayed as the popup value when the user hovers over
 a data point on the map. This column can be a single data item, for example "DATE" or this can be a column of combined

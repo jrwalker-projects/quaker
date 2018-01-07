@@ -9,6 +9,13 @@
 #'   \item{YEAR}{integer year of the quake - can be negative to denote B.C.E year}
 #'   ...
 #' }
+#' @examples
+#' \dontrun{
+#' data(quakes)
+#' my_clean_df <- eq_clean_data(quakes)
+#' }
+#' @seealso \code{\link{eq_clean_data}} to prepare the NOAA data for plotting or mapping functions
+
 #' @source \url{https://www.ngdc.noaa.gov/nndc/struts/results?&t=101650&s=225&d=225} data definitions - the data can be
 #' downloaded from \url{https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1}
 "quakes"
