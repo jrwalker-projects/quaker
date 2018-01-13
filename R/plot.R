@@ -91,13 +91,17 @@ geom_timeline <- function(mapping = NULL, data = NULL,
 #' @importFrom ggplot2 ggproto
 #' @importFrom ggplot2 Geom
 #' @importFrom ggplot2 aes
+#' @importFrom ggplot2 alpha
 #' @importFrom ggplot2 layer
 #' @importFrom ggplot2 draw_key_point
 #' @importFrom lubridate year
 #' @importFrom dplyr filter
+#' @importFrom magrittr %>%
 #' @importFrom grid segmentsGrob
 #' @importFrom grid pointsGrob
 #' @importFrom grid gpar
+#' @importFrom grid gTree
+#' @importFrom grid gList
 #' @export
 GeomTimeline <- ggplot2::ggproto("GeomPoint", ggplot2::Geom,
                         required_aes = c("x"),
@@ -136,17 +140,19 @@ GeomTimeline <- ggplot2::ggproto("GeomPoint", ggplot2::Geom,
                                                    gp = grid::gpar(col = "#636363", fill = "#636363", lwd = 1, lty = 1) #line segment grey
                           )
                           #grob code below is adapted from geom_point (github tidyverse\ggplot2)
+                          .pt <- 72.27 / 25.4
+                          .stroke <- 96 / 25.4
                           dots_grob <- grid::pointsGrob(
                             coords$x, coords$y,
                             pch = coords$shape,
                             gp = grid::gpar(
-                              col = alpha(coords$colour, coords$alpha),
-                              fill = alpha(coords$fill, coords$alpha),
+                              col = ggplot2::alpha(coords$colour, coords$alpha),
+                              fill = ggplot2::alpha(coords$fill, coords$alpha),
                               fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
                               lwd = coords$stroke * .stroke / 2
                             )
                           )
-                          gTree(children = gList(seg_grob, dots_grob))
+                          grid::gTree(children = grid::gList(seg_grob, dots_grob))
                         },
 
                         draw_key = ggplot2::draw_key_point
@@ -257,8 +263,11 @@ geom_timeline_label <- function(mapping = NULL, data = NULL,
 #' @importFrom dplyr group_by
 #' @importFrom dplyr top_n
 #' @importFrom dplyr ungroup
+#' @importFrom magrittr %>%
 #' @importFrom grid segmentsGrob
 #' @importFrom grid textGrob
+#' @importFrom grid gTree
+#' @importFrom grid gList
 #' @importFrom grid gpar
 #' @export
 GeomTimelineLabel <- ggplot2::ggproto("GeomText", ggplot2::Geom,
@@ -278,26 +287,27 @@ GeomTimelineLabel <- ggplot2::ggproto("GeomText", ggplot2::Geom,
                                  }
                                  return(as.numeric(ymd))
                                }
+                               my_data <- data
                                #filter dates by years if xmin or xmax passed
                                if(!is.na(xmin)){
                                  ymd_min <- date_prep(xmin,1,1)
-                                 data <- data %>%
+                                 my_data <- my_data %>%
                                    dplyr::filter(x >= ymd_min)
                                }
                                if(!is.na(xmax)){
                                  ymd_max <- date_prep(xmax,12,31)
-                                 data <- data %>%
+                                 my_data <- my_data %>%
                                    dplyr::filter(x <= ymd_max)
                                }
-                               if(!is.na(n_max)){ #filter max items by size
-                                 data <- data %>%
-                                   dplyr::group_by(group) %>%
+                               if(!is.na(n_max)){ #filter max items by size for n_max param
+                                 my_data <- my_data %>%
+                                   dplyr::group_by(y) %>%
                                    dplyr::top_n(n_max, size) %>%
                                    dplyr::ungroup()
                                }
-                               if (is.null(data$x)) return(grid::zeroGrob())
+                               if (is.null(my_data$x)) return(grid::zeroGrob())
 
-                               coords <- coord$transform(data, panel_params)
+                               coords <- coord$transform(my_data, panel_params)
                                seg_grob <- grid::segmentsGrob(coords$x, coords$y, coords$x, (coords$y*1.2),
                                                         default.units = "native",
                                                         gp = grid::gpar(col = "#636363", fill = "#636363", lwd = 0.8, lty = 1) #line segment grey
@@ -316,7 +326,7 @@ GeomTimelineLabel <- ggplot2::ggproto("GeomText", ggplot2::Geom,
                                  ),
                                  check.overlap = TRUE #don't write overlapping text
                                )
-                               grid::gTree(children = gList(seg_grob, txt_grob))
+                               grid::gTree(children = grid::gList(seg_grob, txt_grob))
                              },
 
                              draw_key = ggplot2::draw_key_text

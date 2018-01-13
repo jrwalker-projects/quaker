@@ -38,13 +38,15 @@ eq_clean_data <- function(indf){
            DATE = as.Date(paste0(yy, "/", MONTH, "/", DAY), format = '%Y/%m/%d'),
            LATITUDE = as.numeric(LATITUDE),
            LONGITUDE = as.numeric(LONGITUDE),
-           EQ_PRIMARY = as.numeric(EQ_PRIMARY),
-           EQ_MAG_MW = as.numeric(EQ_MAG_MW),
-           EQ_MAG_MS = as.numeric(EQ_MAG_MS),
-           EQ_MAG_MB = as.numeric(EQ_MAG_MB),
-           EQ_MAG_ML = as.numeric(EQ_MAG_ML),
-           EQ_MAG_MFA = as.numeric(EQ_MAG_MFA),
-           REGION_CODE = as.factor(REGION_CODE))
+           EQ_PRIMARY = ifelse(is.na(EQ_PRIMARY), as.numeric(0), as.numeric(EQ_PRIMARY)),
+           EQ_MAG_MW = ifelse(is.na(EQ_MAG_MW), as.numeric(0), as.numeric(EQ_MAG_MW)),
+           EQ_MAG_MS = ifelse(is.na(EQ_MAG_MS), as.numeric(0), as.numeric(EQ_MAG_MS)),
+           EQ_MAG_MB = ifelse(is.na(EQ_MAG_MB), as.numeric(0), as.numeric(EQ_MAG_MB)),
+           EQ_MAG_ML = ifelse(is.na(EQ_MAG_ML), as.numeric(0), as.numeric(EQ_MAG_ML)),
+           EQ_MAG_MFA = ifelse(is.na(EQ_MAG_MFA), as.numeric(0), as.numeric(EQ_MAG_MFA)),
+           REGION_CODE = as.factor(REGION_CODE),
+           COUNTRY = as.factor(COUNTRY),
+           TOTAL_DEATHS = ifelse(is.na(TOTAL_DEATHS), as.numeric(0), as.numeric(TOTAL_DEATHS)))
   lubridate::year(outdf$DATE) <- outdf$YEAR
   outdf <- outdf %>%
     dplyr::select(-YEAR, -MONTH, -DAY, -yy)
