@@ -24,29 +24,36 @@
 #' The NOAA earthquake database https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1 and the data defintions
 #' can be found at https://www.ngdc.noaa.gov/nndc/struts/results?&t=101650&s=225&d=225
 #'
+#' @importFrom tidyr separate
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @importFrom lubridate year
+#' @importFrom tools toTitleCase
+#' @importFrom stringr str_trim
 #' @importFrom magrittr %>%
 #'
 #' @export
 eq_clean_data <- function(indf){
   outdf <- indf %>%
+    tidyr::separate(col=LOCATION_NAME, into=c("Country", "LOCATION_NAME"), sep=":", fill="left", extra="merge") %>%
+    dplyr::select(-Country) %>% #remove col created from separate
     dplyr::mutate(MONTH = as.integer(ifelse(is.na(MONTH), 1, MONTH)),
-           DAY = as.integer(ifelse(is.na(DAY), 1, DAY)),
-           yy = as.integer(ifelse(YEAR < 0, (YEAR*-1), YEAR)),
-           DATE = as.Date(paste0(yy, "/", MONTH, "/", DAY), format = '%Y/%m/%d'),
-           LATITUDE = as.numeric(LATITUDE),
-           LONGITUDE = as.numeric(LONGITUDE),
-           EQ_PRIMARY = ifelse(is.na(EQ_PRIMARY), as.numeric(0), as.numeric(EQ_PRIMARY)),
-           EQ_MAG_MW = ifelse(is.na(EQ_MAG_MW), as.numeric(0), as.numeric(EQ_MAG_MW)),
-           EQ_MAG_MS = ifelse(is.na(EQ_MAG_MS), as.numeric(0), as.numeric(EQ_MAG_MS)),
-           EQ_MAG_MB = ifelse(is.na(EQ_MAG_MB), as.numeric(0), as.numeric(EQ_MAG_MB)),
-           EQ_MAG_ML = ifelse(is.na(EQ_MAG_ML), as.numeric(0), as.numeric(EQ_MAG_ML)),
-           EQ_MAG_MFA = ifelse(is.na(EQ_MAG_MFA), as.numeric(0), as.numeric(EQ_MAG_MFA)),
-           REGION_CODE = as.factor(REGION_CODE),
-           COUNTRY = as.factor(COUNTRY),
-           TOTAL_DEATHS = ifelse(is.na(TOTAL_DEATHS), as.numeric(0), as.numeric(TOTAL_DEATHS)))
+                  DAY = as.integer(ifelse(is.na(DAY), 1, DAY)),
+                  yy = as.integer(ifelse(YEAR < 0, (YEAR*-1), YEAR)),
+                  DATE = as.Date(paste0(yy, "/", MONTH, "/", DAY), format = '%Y/%m/%d'),
+                  LOCATION_NAME = tools::toTitleCase(tolower(LOCATION_NAME)),
+                  LOCATION_NAME = stringr::str_trim(LOCATION_NAME),
+                  LATITUDE = as.numeric(LATITUDE),
+                  LONGITUDE = as.numeric(LONGITUDE),
+                  EQ_PRIMARY = ifelse(is.na(EQ_PRIMARY), as.numeric(0), as.numeric(EQ_PRIMARY)),
+                  EQ_MAG_MW = ifelse(is.na(EQ_MAG_MW), as.numeric(0), as.numeric(EQ_MAG_MW)),
+                  EQ_MAG_MS = ifelse(is.na(EQ_MAG_MS), as.numeric(0), as.numeric(EQ_MAG_MS)),
+                  EQ_MAG_MB = ifelse(is.na(EQ_MAG_MB), as.numeric(0), as.numeric(EQ_MAG_MB)),
+                  EQ_MAG_ML = ifelse(is.na(EQ_MAG_ML), as.numeric(0), as.numeric(EQ_MAG_ML)),
+                  EQ_MAG_MFA = ifelse(is.na(EQ_MAG_MFA), as.numeric(0), as.numeric(EQ_MAG_MFA)),
+                  REGION_CODE = as.factor(REGION_CODE),
+                  COUNTRY = as.factor(COUNTRY),
+                  TOTAL_DEATHS = ifelse(is.na(TOTAL_DEATHS), as.numeric(0), as.numeric(TOTAL_DEATHS)))
   lubridate::year(outdf$DATE) <- outdf$YEAR
   outdf <- outdf %>%
     dplyr::select(-YEAR, -MONTH, -DAY, -yy)

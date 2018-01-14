@@ -9,7 +9,7 @@ License: GPL (>= 2) | file LICENSE
 Depends: R (>= 2.10)
 Encoding: UTF-8
 LazyData: true
-Imports: dplyr, ggplot2, magrittr, grid, lubridate, leaflet
+Imports: dplyr, ggplot2, magrittr, grid, lubridate, tools, stringr, tidyr, leaflet
 RoxygenNote: 6.0.1
 Suggests: 
     knitr,

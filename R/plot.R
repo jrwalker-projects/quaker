@@ -313,7 +313,7 @@ GeomTimelineLabel <- ggplot2::ggproto("GeomText", ggplot2::Geom,
                                                         gp = grid::gpar(col = "#636363", fill = "#636363", lwd = 0.8, lty = 1) #line segment grey
                                )
                                txt_grob <- grid::textGrob(
-                                 data$label,
+                                 my_data$label,
                                  coords$x, coords$y*1.2, default.units = "native",
                                  #      just="right",
                                  hjust = 0, vjust = 0.6, #left justified & raised slightly above center
