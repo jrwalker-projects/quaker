@@ -25,4 +25,4 @@ Unit testing for the new geoms uses the vdiffr library to compare plot output.
 To install the quaker package:
 
 	install.packages("devtools")
-	**devtools::install_github("jrwalker-projects/quaker")**
+	devtools::install_github("jrwalker-projects/quaker")

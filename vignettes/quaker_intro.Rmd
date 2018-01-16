@@ -1,0 +1,119 @@
+---
+title: "quaker package intro"
+author: "John Walker"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{quaker package intro}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+## The NOAA Earthquake data
+
+The `quaker` package assists in exploring the U.S. National Oceanographic and Atmospheric Administration (NOAA) on significant earthquakes around the world. This data set contains information about 5,933 earthquakes over an approximately 4,000 year time span. For more on the NOAA data and to download the data set see [the NOAA website](https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1). Data definitions for the data set are [here](https://www.ngdc.noaa.gov/nndc/struts/results?&t=101650&s=225&d=225).
+
+## Installing the package
+
+The `quaker` package is available on GitHub. Use this code to install the R package:
+```{r, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("jrwalker-projects/quaker")
+```
+
+## Data in the quaker package
+
+The `quaker` package contains a small subset of the NOAA data set so that package functions can be tried quickly. The sample data frame is named `quakes` and can be accessed once the library is in place:
+```{r}
+library(quaker)
+str(quakes)
+```
+
+## Preparing data for exploration and visualization - eq_clean_data
+
+The `quaker` package provides a function `eq_clean_data` to clean and prepare the NOAA data (either from the website or from the package). This function
+* Combines MONTH, DAY and YEAR to create a new column **DATE**, removing the columns Month, Day, Year
+* Prepares the LOCATION_NAME column by removing the country name and changing the location to TitleCase
+* Where appropriate changes number columns to be numeric, replacing NA values with zeroes
+* Changes COUNTRY and REGION_CODE to be factors
+
+Example use of this function:
+```{r}
+clean_eq_df <- eq_clean_data(quakes)
+```
+
+## Plotting earthquake timelines - geom_timeline & geom_timeline_label
+
+### Plotting a timeline for earthquakes
+
+Two functions in the package assist in plotting a timeline for earthquakes - `geom_timeline` and `geom_timeline_label` are extensions of the `ggplot2` library. For more information on ggplot2 see [http://ggplot2.tidyverse.org/](http://ggplot2.tidyverse.org/). `geom_timeline` uses an x attribute of dates to plot earthquake events over time. To plot the timeline using the data from the package for China and Greece we can clean the `quakes` data set, filter rows only for those two countries and display the timeline using `geom_timeline` as part of `ggplot`.
+
+```{r}
+library(quaker)
+library(ggplot2); library(dplyr); library(magrittr)
+
+quakes %>%
+  eq_clean_data() %>%
+  filter(COUNTRY %in% c("CHINA", "GREECE")) %>%
+  ggplot(aes(x=DATE, y=COUNTRY,colour=EQ_PRIMARY, alpha=TOTAL_DEATHS, size=EQ_PRIMARY)) +
+  geom_timeline() + 
+  guides(alpha = FALSE, colour=FALSE, size=guide_legend(title="Magnitude")) +
+  scale_x_date(date_labels = "%Y") 
+```
+
+Other variations are possible, for example the timeline could examine world regions or states instead of countries by using a different y aesthetic.
+
+### Labeling locations on the timeline 
+
+The `geom_timeline_label` function works with `geom_timeline` to label points on the timeline by location using the `label` aesthetic. Since the points can be rather dense, the `n_max` parameter to `geom_timeline_label` can be used to label only the n_max largest quakes. The size attribute in the ggplot call is used to determine what's meant by largest. An example call labeling the 3 largest quakes in each country looks like this:
+```{r}
+quakes %>%
+  eq_clean_data() %>%
+  filter(COUNTRY %in% c("GREECE","USA","CHINA")) %>%
+  ggplot(aes(x=DATE, y=COUNTRY,colour=EQ_PRIMARY, alpha=TOTAL_DEATHS, size=EQ_PRIMARY)) +
+  geom_timeline() + 
+  geom_timeline_label(n_max = 3, aes(label=LOCATION_NAME)) +
+  guides(alpha = FALSE, colour=FALSE, size=guide_legend(title="Magnitude")) +
+  scale_x_date(date_labels = "%Y") 
+
+```
+
+## Mapping Eatthquake events using Leaflet
+
+### Creating an interactive map with eq_map
+
+The `eq_map` function uses Leaflet to create an interactive map of earthquake locations providing additional information as a user clicks on data points. The example below creates a map of earthquakes in China. The `pretty` parameter tells the function to add the column name (in this case 'Date:') prior to the displayed data for the data point selected on the map. 
+```{r}
+quakes %>%
+  eq_clean_data() %>%
+    dplyr::filter(COUNTRY == "CHINA") %>% 
+  eq_map(annot_col = "DATE", pretty=TRUE)
+```
+
+### helper function eq_create_label displays additional popup information
+
+The `eq_create_label` function can be used with `eq_map` to create a special column of popup information combining LOCATION_NAME, EQ_PRIMARY (labeled Magnitude) and TOTAL_DEATHS. Combining the functions to create a Leaflet map can look like this:
+```{r}
+quakes %>%
+  eq_clean_data() %>%
+  dplyr::filter(COUNTRY == "JAPAN" ) %>%
+  dplyr::mutate(popup_text = eq_create_label(.)) %>% 
+  eq_map(annot_col = "popup_text")
+```
+
+
+
+
+
+
+
+
+
+
+
