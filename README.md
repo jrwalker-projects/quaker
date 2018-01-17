@@ -14,11 +14,11 @@ The quaker function **eq_clean_data** prepares NOAA website data for visualizati
 
 ggplot2 extentions **geom_timeline** and **geom_timeline_label** allow views of earthquake data over time for one or more countries
 
-![Sample timepline chart for US & Greece with location labels for the largest quakes by magnitude](figs/ReadmeTimelineLabels.png)
+![Sample timepline chart for US & Greece with location labels for the largest quakes by magnitude](man/figures/ReadmeTimelineLabels.png)
 
 interactive leaflet maps **eq_map** displays earthquake locations on an interactive map providing additional information as the user selects data points
 
-![Sample map for Mexico earthquakes showing location, magnitude and the total number of deaths for data points](figs/ReadmeEqMaps.png)
+![Sample map for Mexico earthquakes showing location, magnitude and the total number of deaths for data points](man/figures/ReadmeEqMaps.png)
 
 Unit testing for the new geoms uses the vdiffr library to compare plot output.
 
