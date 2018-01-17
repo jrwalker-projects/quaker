@@ -31,6 +31,7 @@
 #' @importFrom dplyr one_of
 #' @importFrom dplyr mutate
 #' @importFrom leaflet leaflet
+#' @importFrom leaflet addProviderTiles
 #' @importFrom leaflet addTiles
 #' @importFrom leaflet addCircleMarkers
 #' @importFrom magrittr %>%
@@ -48,6 +49,7 @@ eq_map <- function(df, annot_col, pretty = FALSE){
       dplyr::mutate(popup_info = paste("<b>", ptxt, ":</b> ", popup_info))
   }
   leaflet::leaflet() %>%
+    leaflet::addProviderTiles("OpenStreetMap") %>% #default in RStudio but need to specify elsewhere (console, Shiny)
     leaflet::addTiles() %>%
     leaflet::addCircleMarkers(data = df, radius = ~ EQ_PRIMARY,
                      lng = ~ LONGITUDE, lat = ~ LATITUDE,
@@ -84,6 +86,6 @@ eq_create_label <- function(df){
   tf <- df %>%
     dplyr::mutate(loc = ifelse(is.na(LOCATION_NAME), "", paste("<b>Location: </b>", LOCATION_NAME, "<br />")),
            mag = ifelse(is.na(EQ_PRIMARY), "", paste("<b>Magnitude: </b>", EQ_PRIMARY, "<br />")),
-           dead = ifelse(is.na(TOTAL_DEATHS), "", paste("<b>Total Deaths: </b>", TOTAL_DEATHS)))
+           dead = ifelse(is.na(TOTAL_DEATHS) | (TOTAL_DEATHS == 0), "", paste("<b>Total Deaths: </b>", TOTAL_DEATHS)))
   return(paste0(tf$loc, tf$mag, tf$dead))
 }
